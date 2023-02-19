@@ -1,0 +1,28 @@
+settings:
+  token_env: TOKEN
+  parse_mode: markdown
+  long_poller: {}
+
+buttons:
+  id:
+    unique: 'id'
+    text: 'Get ID'
+  
+  utils:
+    unique: 'utils'
+    text: 'Utils'
+  
+  menu:
+    unique: 'menu'
+    text: 'Menu'
+
+
+markups:
+  start:
+    - [utils]
+  
+  utils:
+    - [id, menu]
+  
+  menu:
+    - [menu]
