@@ -1,17 +1,13 @@
 name: CI
 
-on: [push]
-
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
 
 env:
   IMAGE_NAME: "bot"
+  REGISTRY: "ghcr.io"
 
 jobs:
   test:
@@ -44,10 +40,11 @@ jobs:
 
       # - name: Login to Github Container Registry
       #   run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1 
         with:
-         registry: ghcr.io
+         registry: ${{ env.REGISTRY }}
          username: ${{ github.actor }}
          password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -68,20 +65,20 @@ jobs:
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'push'
-  #   needs: build_and_push
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs: [test, build_and_push]
 
-  #   steps:
-  #     - name: Deploy to Server via SSH action
-  #       uses: appleboy/ssh-action@v0.1.3
-  #       with:
-  #         host: ${{ secrets.HOST }}
-  #         username: ${{ secrets.USERNAME }}
-  #         key: ${{ secrets.SSHKEY }}
-  #         port: ${{ secrets.PORT }}
-  #         script: |
-  #           cd /home/${{ secrets.USERNAME }}/${{ env.CONTAINER_NAME }}
-  #           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-  #           docker compose up -d
+    steps:
+      - name: Deploy to Server via SSH action
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /home/${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}
+            docker pull ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
+            docker compose up -d
