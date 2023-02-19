@@ -1,4 +1,4 @@
-module bot
+module github.com/hararudoka/bot
 
 go 1.20
 
