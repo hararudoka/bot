@@ -4,4 +4,4 @@ ifneq (,$(wildcard ./.env))
 endif
 
 run:
-	go run main.go
+	go run cmd/main.go
