@@ -3,5 +3,3 @@ services:
     image: "ghcr.io/hararudoka/bot:latest"
     env_file:
       - .env
-    ports:
-      - "80:80"
