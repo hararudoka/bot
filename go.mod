@@ -2,7 +2,10 @@ module github.com/hararudoka/bot
 
 go 1.20
 
-require gopkg.in/telebot.v3 v3.1.2
+require (
+	github.com/google/uuid v1.3.0
+	gopkg.in/telebot.v3 v3.1.2
+)
 
 require (
 	github.com/fatih/color v1.13.0 // indirect
