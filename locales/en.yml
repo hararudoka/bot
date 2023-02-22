@@ -10,3 +10,6 @@ utils: |-
 
 menu: |-
   Main menu.
+
+link: |-
+  Link: `{{.Link}}`
